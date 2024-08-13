@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <a href="{% url 'comments:add' %}" target="_blank" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
+        Add
+    </a>
+
+
+
+
+    {% for i in comments %}
+        <hr>
+        
+        
+        <p style="color: rgb(255, 0, 0); font-size: 18px; font-weight: bold; background-color: #f0f0f0; padding: 10px; border-radius: 5px; text-align: center;">
+            {{i.pk}}
+        </p>
+
+
+        <p style="text-align: center; font-size: 16px; font-family: Arial, sans-serif; color: #333; line-height: 1.5; margin: 20px 0;">
+            {{i.text}}
+        </p>
+        
+        
+        <p style="text-align: center; font-size: 14px; font-family: Arial, sans-serif; color: #333; line-height: 1.5; margin: 20px 0;">
+            {{i.date_posted }}
+        </p>
+
+
+
+        <!-- <a href="/update/{{i.id}}">Edit</a>     Se puede hacer asi tmb              -->
+        <a href="{% url 'comments:update' i.id %}" style="display: inline-block; background-color: #800080; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold; transition: background-color 0.3s ease;">
+            Edit
+        </a>
+
+
+        <form action="{% url 'comments:delete' i.id %}" method="post" style="display: inline-block; background-color: #ff0000; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold; transition: background-color 0.3s ease;">
+            
+            {% csrf_token %}   <!-- seguridad -->
+            <input type="submit" value="DELETE">
+
+        </form>
+            
+        <hr>
+    {% endfor%}
+
+
+    <nav>
+
+        
+        <ul class="pagination justify-content-center">
+            {% if comments.has_previous %}
+
+                <li class = 'page-item'>
+                    <a class = 'page-link' href="?page={{ comments.previous_page_number }}">Prev</a>
+                </li>
+
+            {% endif %}
+            
+            <li class = 'page-item'>
+
+                {% for i in comments.paginator.page_range %}
+
+                    {% if i == comments.number %}
+                        <a href="?page={{ i }}" class = 'page-link active'>
+                            {{i}}
+                        </a>
+
+                    {% else %}
+
+                        <a href="?page={{ i }}" class = 'page-link'>
+                            {{i}}
+                        </a>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </li> 
+            
+
+            {% if comments.has_next %}
+
+                <li class = 'page-item'>
+                    <a class = 'page-link' href="?page={{ comments.next_page_number }}">Next</a>
+                </li>
+
+            {% endif %}
+
+
+
+        </ul>
+    </nav>
+
+
+
+</body>
+</html>
